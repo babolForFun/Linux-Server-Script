@@ -17,8 +17,7 @@
 
 
 #### TOMCAT
-* Download tomcat for linux (Binary Distribution - tar.gz file) 
- https://tomcat.apache.org/download-70.cgi
+* Download [tomcat for linux](https://tomcat.apache.org/download-70.cgi "Tomcat") (Binary Distribution - tar.gz file)
 
 
 #### CMD (as administrator)

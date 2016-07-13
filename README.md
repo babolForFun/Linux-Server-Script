@@ -32,7 +32,7 @@
 
 * Copy *tomcat.tar.gz* folder from our machine to AWS machine by SSH (using port 22, remember colon at the end!)	
 ```sh
-        $ scp -i "[PATH_KEY]\KEY_SSH.pem" "[PATH_TOMCAT]\apache-tomcat-7.0.70.tar.gz" ec2-user@[AWS_SERVER_IP]: 
+        $ scp -i "[PATH_KEY]\KEY_SSH.pem" "[PATH_TOMCAT]\apache-tomcat-x.x.xx.tar.gz" ec2-user@[AWS_SERVER_IP]: 
 ```
 * Connect to AWS using ssh protocol
 ```sh

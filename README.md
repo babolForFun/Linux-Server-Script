@@ -160,18 +160,19 @@ esac
 exit 0  
   ```
   
-* Make the script executable (repeat for each instance)  
-	```sh
-        $ sudo chmod 755 /etc/init.d/TOMCAT_[#]
-    ```
+* Make the script executable (repeat for each instance) 
+* 
+```sh
+	$ sudo chmod 755 /etc/init.d/TOMCAT_[#]
+```
 * Start tomcat service (repeat for each instance)
 	```sh
-	    $ sudo service TOMCAT_[#] start
+	$ sudo service TOMCAT_[#] start
     ```
     
 * Add tomcat service in startup (repeat for each instance)
 	```sh
-   	    $ sudo chkconfig TOMCAT_[#] on
+	$ sudo chkconfig TOMCAT_[#] on
     ```
 
 

@@ -104,60 +104,113 @@
 
 
 ```sh
-#!/bin/sh
- 
-### BEGIN INIT INFO  
-# Provides:          tomcat  
-# Required-Start:    $remote_fs $syslog  
-# Required-Stop:     $remote_fs $syslog  
-# Default-Start:     2 3 4 5  
-# Default-Stop:      0 1 6  
-# Short-Description: Start and stop Apache Tomcat  
-# Description:       Enable Apache Tomcat service provided by daemon.  
+
+#!/bin/bash
+#
+# tomcat7qrcode     This shell script takes care of starting and stopping Tomcat
+#
+# chkconfig: - 80 20
+#
+### BEGIN INIT INFO
+# Provides: tomcat8_qrcode
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:2 3 4 5
+# Default-Stop: 0 1 6
+# Description: Release implementation for Servlet 2.5 and JSP 2.1
+# Short-Description: start and stop tomcat_qrcode
 ### END INIT INFO
- 
-ECHO=/bin/echo  
-TEST=/usr/bin/test  
-TOMCAT_USER=root                                         # YOUR USER  
-TOMCAT_HOME=/opt/TOMCAT_[#]                              # HOME OF YOUR TOMCAT INSTANCE  
-TOMCAT_START_SCRIPT=$TOMCAT_HOME/bin/startup.sh  
-TOMCAT_STOP_SCRIPT=$TOMCAT_HOME/bin/shutdown.sh  
- 
-$TEST -x $TOMCAT_START_SCRIPT || exit 0  
-$TEST -x $TOMCAT_STOP_SCRIPT || exit 0  
- 
-start() {  
-    $ECHO -n "Starting TOMCAT_[#]"                                  # TOMCAT SERVICE NAME  
-    su - $TOMCAT_USER -c "$TOMCAT_START_SCRIPT &"  
-    $ECHO "."  
-}  
-   
-stop() {  
-    $ECHO -n "Stopping TOMCAT_[#]"                                  # TOMCAT SERVICE NAME  
-    su - $TOMCAT_USER -c "$TOMCAT_STOP_SCRIPT 60 -force &"  
-    while [ "$(ps -fu $TOMCAT_USER | grep java | grep tomcat | wc -l)" -gt "0" ]; do  
-        sleep 5; $ECHO -n "."  
-    done  
-    $ECHO "."  
-}  
-   
-case "$1" in  
-    start)  
-        start  
-        ;;  
-    stop)  
-        stop  
-        ;;  
-    restart)  
-        stop  
-        sleep 30  
-        start  
-        ;;  
-    *)  
-        $ECHO "Usage: TOMCAT_[#] {start|stop|restart}"              # TOMCAT SERVICE NAME  
-        exit 1  
-esac  
-exit 0  
+
+## Source function library.
+#. /etc/rc.d/init.d/functions
+NAME="$(basename $0)"
+export JAVA_HOME=/usr/lib/jvm/jre
+export JAVA_OPTS="-Dfile.encoding=UTF-8 \
+  -Dcatalina.logbase=/var/log/tomcat7qrcode\
+  -Dnet.sf.ehcache.skipUpdateCheck=true \
+  -XX:+DoEscapeAnalysis \
+  -XX:+UseConcMarkSweepGC \
+  -XX:+CMSClassUnloadingEnabled \
+  -XX:+UseParNewGC \
+  -XX:MaxPermSize=128m \
+  -Xms512m -Xmx512m"
+export PATH=$JAVA_HOME/bin:$PATH
+# Change the below value!!!
+TOMCAT_HOME=/usr/share/tomcat8_qrcode
+SHUTDOWN_WAIT=20
+
+
+tomcat_qrcode_pid() {
+	echo `ps aux | grep -w $TOMCAT_HOME | grep -v grep | awk '{ print $2 }'`
+}
+
+start() {
+  pid=$(tomcat_qrcode_pid)
+  if [ -n "$pid" ]
+  then
+    echo "${NAME} is already running (pid: $pid)"
+  else
+    # Start tomcat qrcode
+    echo "Starting ${NAME}"
+    ulimit -n 100000
+    umask 007
+    sudo $TOMCAT_HOME/bin/startup.sh
+  fi
+
+
+  return 0
+}
+stop() {
+  pid=$(tomcat_qrcode_pid)
+  if [ -n "$pid" ]
+  then
+    echo "Stoping ${NAME}"
+    sudo $TOMCAT_HOME/bin/shutdown.sh
+
+    let kwait=$SHUTDOWN_WAIT
+    count=0;
+    until [ `ps -p $pid | grep -c $pid` = '0' ] || [ $count -gt $kwait ]
+    do
+      echo -n -e "\nwaiting for processes to exit";
+      sleep 1
+      let count=$count+1;
+    done
+
+    if [ $count -gt $kwait ]; then
+      echo -n -e "\nkilling processes which didn't stop after $SHUTDOWN_WAIT seconds"
+      kill -9 $pid
+    fi
+  else
+    echo "${NAME} is not running"
+  fi
+
+  return 0
+}
+
+case $1 in
+start)
+  start
+;;
+stop)
+  stop
+;;
+restart)
+  stop
+  start
+;;
+status)
+  pid=$(tomcat_qrcode_pid)
+  if [ -n "$pid" ]
+  then
+    echo "${NAME} is running with pid: $pid"
+  else
+    echo "${NAME} is not running"
+  fi
+;;
+esac
+exit 0
+
+
   ```
   
 * Make the script executable (repeat for each instance) 

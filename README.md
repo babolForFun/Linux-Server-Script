@@ -161,7 +161,6 @@ exit 0
   ```
   
 * Make the script executable (repeat for each instance) 
-* 
 ```sh
 	$ sudo chmod 755 /etc/init.d/TOMCAT_[#]
 ```

@@ -1,5 +1,5 @@
 
-# INSTALL MULTIPLE TOMCAT INSTANCE IN LINUX SERVER
+# INSTALL MULTIPLE TOMCAT INSTANCE IN LINUX SERVER (Gabriele Bonadiman & Adrian Fall)
 
 This tutorial explains how to install multiple tomcat instance in a generic server Linux. In this example we are using AWS instances but the steps are valid even in a normal server with JAVA installed.
 

@@ -1,7 +1,7 @@
 
-# INSTALL MULTIPLE TOMCAT INSTANCE IN LINUX SERVER BY SSH
+# INSTALL MULTIPLE TOMCAT INSTANCE IN LINUX SERVER
 
-## LEGEND
+### LEGEND
 
 	PATH_KEY       = path of ssh_pem.pem file 
 	PATH_TOMCAT    = folder with Tomcat instance
@@ -10,17 +10,17 @@
 	TOMCAT_[#name] = name of multiple instance - ex. TOMCAT_i1, TOMCAT_i2
 
 
-#### AWS console
+### AWS console
     Create new linux machine 
     Create a key and download the .pem file
     Save the SERVER_IP of the machines (or Elastic IP) 
 
 
-#### TOMCAT
+### TOMCAT
 * Download [tomcat for linux](https://tomcat.apache.org/download-70.cgi "Tomcat") (Binary Distribution - tar.gz file)
 
 
-#### CMD (as administrator)
+### SHELL (as sudo/administrator)
 
 * Install OpenSSH (Only if you are in a windows machine) follow this [OpenSSH tutorial](http://linuxbsdos.com/2015/07/30/how-to-install-openssh-on-windows-10/ "OpenSSH Tutorial")
 	
@@ -34,12 +34,12 @@
 ```sh
         $ scp -i "[PATH_KEY]\KEY_SSH.pem" "[PATH_TOMCAT]\apache-tomcat-x.x.xx.tar.gz" ec2-user@[AWS_SERVER_IP]: 
 ```
-* Connect to AWS using ssh protocol
+* Connect to AWS using ssh
 ```sh
 	    $ ssh -v -i [PATH_KEY]\KEY_SSH.pem ec2-user@AWS_SERVER_IP
 ```
 
-* Once connected check if tomcat folder is in our home.  You should have something like *apache-tomcat-x.x.x.tar.gz*. If not repeat the SSH tranfer
+* Once connected, check if tomcat folder is in our home.  You should have something like *apache-tomcat-x.x.x.tar.gz*. If not repeat the SSH tranfer
 ```sh
 	    $ ls -la
  ```
@@ -59,7 +59,7 @@
 	    $ cp -rf TOMCAT_i1 ./TOMCAT_i2
  ```
 
-* Copy the folders into */opt/* (repeat for each instance)
+* Copy the folders into */usr/share* (repeat for each instance)
 ```sh	
 	    $ sudo mv ./TOMCAT_i1 /opt/
 	    $ sudo mv ./TOMCAT_i2 /opt/
@@ -71,24 +71,21 @@
 	    $ sudo nano /opt/TOMCAT_[#]/conf/server.xml
 ```
 
-***change server port***
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***change server port***
 
         <server port="8x05" shutdown="SHUTDOWN">
 
 
-***change connector port***
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***change connector port***
 
         <Connector port="8x8x" protocol="HTTP/1.1"
                    connectionTimeout="20000"
 	               redirectPort="8443" />
 	               
-***change redirect port***
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***change redirect port***
 
-        <Connector port="8x09" protocol="AJP/1.3" redirectPort="8443" />
-
-
-
-
+        <Connector port="8x09" protocol="AJP/1.3" redirectPort="8443" />  
+        
 * Create script to run Tomcat as a service (repeat for each instance)
 ```sh
 	$ sudo touch /etc/init.d/TOMCAT_[#]
@@ -99,7 +96,7 @@
 	$ sudo nano /etc/init.d/TOMCAT_[#]	
 ```
 
-* Copy and paste this script (adding your changes). The script end is "exit 0" row. The script is not complete and it has to be update. Edited from [here](http://wiki.openkm.com/index.php/Configure_Tomcat_service_linux "script tomcat")
+* Copy and paste this script (look for "*TOMCAT_[#]"*). The script end is "exit 0" row. The script is not complete and it has to be update. Edited from [valotas - GitHub](https://gist.github.com/valotas/1000094 "tomcat script")
 
 
 
@@ -107,12 +104,12 @@
 
 #!/bin/bash
 #
-# tomcat7qrcode     This shell script takes care of starting and stopping Tomcat
+# tomcat     This shell script takes care of starting and stopping Tomcat
 #
 # chkconfig: - 80 20
 #
 ### BEGIN INIT INFO
-# Provides: tomcat8_qrcode
+# Provides: TOMCAT_[#]
 # Required-Start: $network $syslog
 # Required-Stop: $network $syslog
 # Default-Start:2 3 4 5
@@ -136,7 +133,7 @@ export JAVA_OPTS="-Dfile.encoding=UTF-8 \
   -Xms512m -Xmx512m"
 export PATH=$JAVA_HOME/bin:$PATH
 # Change the below value!!!
-TOMCAT_HOME=/usr/share/tomcat8_qrcode
+TOMCAT_HOME=/usr/share/TOMCAT_[#]
 SHUTDOWN_WAIT=20
 
 
@@ -229,7 +226,7 @@ exit 0
 
 
 
-#### AWS console
+### AWS console
 
 * Select your machine instance  
 * Under DESCRIPTION tab, in security gorups option, lunch *"lunch-wizard-xx"*   
@@ -248,9 +245,9 @@ exit 0
 
 
 
-## CMD (as administrator)
+### SHELL (as sudo/administrator)
 
-* Connect to AWS using ssh protocol (!!!!!! It might be changed if your are not using Elastic IP)  
+* Connect to AWS using ssh protocol (!!!!!! Server IP might be changed if your are not using static IP)  
 ```sh
     $ ssh -v -i [PATH_KEY]\KEY_SSH.pem ec2-user@AWS_SERVER_IP
 ```
@@ -262,7 +259,7 @@ exit 0
 
 
 
-## Browser
+### BROWSER
 
 * Open a browser and check your tomcat instance   
 ```sh

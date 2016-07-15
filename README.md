@@ -1,8 +1,9 @@
 
 # INSTALL MULTIPLE TOMCAT INSTANCE IN LINUX SERVER
 
-### LEGEND
+This tutorial explains how to install multiple tomcat instance in a generic server Linux. In this example we are using AWS instances but the steps are valid even in a normal server with JAVA installed.
 
+### LEGEND
 	PATH_KEY       = path of ssh_pem.pem file 
 	PATH_TOMCAT    = folder with Tomcat instance
 	KEY_SSH        = .pem file, certificate key to access into AWS
@@ -10,8 +11,8 @@
 	TOMCAT_[#name] = name of multiple instance - ex. TOMCAT_i1, TOMCAT_i2
 
 
-### AWS console
-    Create new linux machine 
+### AWS console [Optional]
+    Create new Amazon Web Service Insance with linux filesystem 
     Create a key and download the .pem file
     Save the SERVER_IP of the machines (or Elastic IP) 
 
@@ -115,15 +116,15 @@
 # Default-Start:2 3 4 5
 # Default-Stop: 0 1 6
 # Description: Release implementation for Servlet 2.5 and JSP 2.1
-# Short-Description: start and stop tomcat_qrcode
+# Short-Description: start and stop TOMCAT_[#]
 ### END INIT INFO
 
 ## Source function library.
 #. /etc/rc.d/init.d/functions
 NAME="$(basename $0)"
-export JAVA_HOME=/usr/lib/jvm/jre
+export JAVA_HOME=/usr/lib/jvm/jre                                              # Double check your java path
 export JAVA_OPTS="-Dfile.encoding=UTF-8 \
-  -Dcatalina.logbase=/var/log/tomcat7qrcode\
+  -Dcatalina.logbase=/var/log/TOMCAT_[#]\
   -Dnet.sf.ehcache.skipUpdateCheck=true \
   -XX:+DoEscapeAnalysis \
   -XX:+UseConcMarkSweepGC \
@@ -132,22 +133,21 @@ export JAVA_OPTS="-Dfile.encoding=UTF-8 \
   -XX:MaxPermSize=128m \
   -Xms512m -Xmx512m"
 export PATH=$JAVA_HOME/bin:$PATH
-# Change the below value!!!
 TOMCAT_HOME=/usr/share/TOMCAT_[#]
 SHUTDOWN_WAIT=20
 
 
-tomcat_qrcode_pid() {
+tomcat_pid() {
 	echo `ps aux | grep -w $TOMCAT_HOME | grep -v grep | awk '{ print $2 }'`
 }
 
 start() {
-  pid=$(tomcat_qrcode_pid)
+  pid=$(tomcat_pid)
   if [ -n "$pid" ]
   then
     echo "${NAME} is already running (pid: $pid)"
   else
-    # Start tomcat qrcode
+    # Start TOMCAT_[#]
     echo "Starting ${NAME}"
     ulimit -n 100000
     umask 007
@@ -158,7 +158,7 @@ start() {
   return 0
 }
 stop() {
-  pid=$(tomcat_qrcode_pid)
+  pid=$(tomcat_pid)
   if [ -n "$pid" ]
   then
     echo "Stoping ${NAME}"
@@ -196,7 +196,7 @@ restart)
   start
 ;;
 status)
-  pid=$(tomcat_qrcode_pid)
+  pid=$(tomcat_pid)
   if [ -n "$pid" ]
   then
     echo "${NAME} is running with pid: $pid"

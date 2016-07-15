@@ -62,14 +62,20 @@ This tutorial explains how to install multiple tomcat instance in a generic serv
 
 * Copy the folders into */usr/share* (repeat for each instance)
 ```sh	
-	    $ sudo mv ./TOMCAT_i1 /opt/
-	    $ sudo mv ./TOMCAT_i2 /opt/
+	    $ sudo mv ./TOMCAT_i1 /usr/share/
+	    $ sudo mv ./TOMCAT_i2 /usr/share/
     	...
+```
+
+* Change the permissions of the tomcat directory (repeat for each instance)
+```sh
+	    $ sudo chgrp root /TOMCAT_[#]
+	    $ sudo chown root /TOMCAT_[#]
 ```
 
 * Edit server configuration file (repeat for each instance)
 ```sh
-	    $ sudo nano /opt/TOMCAT_[#]/conf/server.xml
+	    $ sudo nano /usr/share/TOMCAT_[#]/conf/server.xml
 ```
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;***change server port***

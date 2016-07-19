@@ -18,7 +18,7 @@ This tutorial explains how to install multiple tomcat instance in a generic serv
 
 
 ### TOMCAT
-* Download [tomcat for linux](https://tomcat.apache.org/download-70.cgi "Tomcat") (Binary Distribution - tar.gz file)
+* Download [tomcat for linux](http://tomcat.apache.org/download-80.cgi "Tomcat") (Binary Distribution - tar.gz file)
 
 
 ### SHELL (as sudo/administrator)

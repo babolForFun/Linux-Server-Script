@@ -69,8 +69,8 @@ This tutorial explains how to install multiple tomcat instance in a generic serv
 
 * Change the permissions of the tomcat directory (repeat for each instance)
 ```sh
-	    $ sudo chgrp root /TOMCAT_[#]
-	    $ sudo chown root /TOMCAT_[#]
+	    $ sudo chgrp -R root /TOMCAT_[#]
+	    $ sudo chown -R root /TOMCAT_[#]
 ```
 
 * Edit server configuration file (repeat for each instance)
